@@ -1,5 +1,5 @@
-STUID = 211220000
-STUNAME = 张三
+STUID = lianhuilin@126.com
+STUNAME = billin
 
 # DO NOT modify the following code!!!
 
