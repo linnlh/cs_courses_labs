@@ -54,6 +54,13 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_x(char *args);
+static int cmd_p(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
+
 static struct {
   const char *name;
   const char *description;
@@ -63,7 +70,13 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
 
-  /* TODO: Add more commands */
+  // NOTE(linlianhui): Add new command for sdb
+  { "si", "Exit NEMU", cmd_si },
+  { "info", "Print register status or watchpoint information", cmd_info },
+  { "x", "Evaluate expression's value. Using the result as starting address and printing N continuous 4 bytes value in hex form", cmd_x },
+  { "p", "Exit NEMU", cmd_p },
+  { "w", "Exit NEMU", cmd_w },
+  { "d", "Exit NEMU", cmd_d },
 
 };
 
@@ -90,6 +103,30 @@ static int cmd_help(char *args) {
     printf("Unknown command '%s'\n", arg);
   }
   return 0;
+}
+
+static int cmd_si(char *args) {
+  return -1;
+}
+
+static int cmd_info(char *args) {
+  return -1;
+}
+
+static int cmd_x(char *args) {
+  return -1;
+}
+
+static int cmd_p(char *args) {
+  return -1;
+}
+
+static int cmd_w(char *args) {
+  return -1;
+}
+
+static int cmd_d(char *args) {
+  return -1;
 }
 
 void sdb_set_batch_mode() {
