@@ -25,7 +25,7 @@ const char *regs[] = {
 
 void isa_reg_display() {
   for(int idx = 0; idx < 32; ++idx) {
-    printf("%10s" "10x%016"PRIx64 "\n", regs[idx], cpu.gpr[idx]);
+    printf("%-10s" "0x%016"PRIx64 "\n", regs[idx], cpu.gpr[idx]);
   }
 }
 
