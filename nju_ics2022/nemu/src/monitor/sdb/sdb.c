@@ -20,6 +20,7 @@
 #include "sdb.h"
 
 #include <utils.h>
+#include <memory/paddr.h>
 
 static int is_batch_mode = false;
 
@@ -134,8 +135,9 @@ static int cmd_x(char *args) {
 
   paddr_t address;
   sscanf(arg, FMT_PADDR, &address);
+  uint32_t* value = (uint32_t*)guest_to_host(address);
+  printf("0x%08"PRIx32, *value);
 
-  printf("Here\n");
   return 0;
 }
 
