@@ -17,12 +17,12 @@
 #include <cpu/cpu.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <utils.h>
 #include "sdb.h"
+
+#include <utils.h>
 
 static int is_batch_mode = false;
 
-extern NEMUState nemu_state;
 
 void init_regex();
 void init_wp_pool();
