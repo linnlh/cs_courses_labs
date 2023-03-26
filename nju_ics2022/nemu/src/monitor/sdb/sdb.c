@@ -129,7 +129,14 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
-  return -1;
+  char *arg = strtok(NULL, " ");
+  arg = strtok(NULL, " ");
+
+  paddr_t address;
+  sscanf(arg, FMT_PADDR, &address);
+
+  printf("Here\n");
+  return 0;
 }
 
 static int cmd_p(char *args) {
