@@ -75,12 +75,12 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   // NOTE(linlianhui): Add new command for sdb
-  { "si", "Exit NEMU", cmd_si },
+  { "si", "Continue the execution of the program for [N] instructions, the default value for N is 1", cmd_si },
   { "info", "Print register status or watchpoint information", cmd_info },
   { "x", "Evaluate expression's value. Using the result as starting address and printing N continuous 4 bytes value in hex form", cmd_x },
-  { "p", "Exit NEMU", cmd_p },
-  { "w", "Exit NEMU", cmd_w },
-  { "d", "Exit NEMU", cmd_d },
+  { "p", "Evaluate expression's value", cmd_p },
+  { "w", "Pause the program when the expression's value is changed", cmd_w },
+  { "d", "Delete watchpoint whose number is N", cmd_d },
 
 };
 
