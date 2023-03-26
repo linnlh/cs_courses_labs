@@ -110,7 +110,17 @@ static int cmd_help(char *args) {
 }
 
 static int cmd_si(char *args) {
-  return -1;
+  // extract the first argument
+  char *arg = strtok(NULL, " ");
+  uint64_t n = 1;
+
+  if(arg != NULL) {
+    sscanf(arg, "%lu", &n);
+  }
+
+  cpu_exec(n);
+
+  return 0;
 }
 
 static int cmd_info(char *args) {
