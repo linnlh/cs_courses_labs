@@ -146,7 +146,9 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_p(char *args) {
-  return -1;
+  bool succse;
+  expr(args, &succse);
+  return 0;
 }
 
 static int cmd_w(char *args) {

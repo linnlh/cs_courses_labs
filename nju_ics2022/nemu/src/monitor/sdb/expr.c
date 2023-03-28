@@ -21,10 +21,15 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
+  TK_NOTYPE = 256,
+  TK_EQ = 1,
 
-  /* TODO: Add more token types */
-
+  // NOTE(linlianhui): Add element type
+  TK_OP = 2,
+  TK_OCT = 3,
+  TK_DEC = 4,
+  TK_HEX = 5,
+  TK_PAREN = 6,
 };
 
 static struct rule {
@@ -38,7 +43,13 @@ static struct rule {
 
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
+  {"-", '-'},           // minus
+  {"\\*", '*'},         // multiply
+  {"/", '/'},           // divide
   {"==", TK_EQ},        // equal
+  {"^[1-9]\\d*", TK_DEC},  // decimal
+  {"(|)", TK_PAREN},    // parentheses
+  {}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -113,6 +124,7 @@ static bool make_token(char *e) {
 
 
 word_t expr(char *e, bool *success) {
+  printf("here...\n");
   if (!make_token(e)) {
     *success = false;
     return 0;
