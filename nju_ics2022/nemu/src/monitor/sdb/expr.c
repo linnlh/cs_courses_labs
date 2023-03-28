@@ -49,7 +49,6 @@ static struct rule {
   {"==", TK_EQ},        // equal
   {"^[1-9]\\d*", TK_DEC},  // decimal
   {"(|)", TK_PAREN},    // parentheses
-  {}
 };
 
 #define NR_REGEX ARRLEN(rules)
