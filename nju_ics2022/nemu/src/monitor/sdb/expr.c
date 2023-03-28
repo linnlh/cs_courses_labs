@@ -48,8 +48,8 @@ static struct rule
     {"-", '-'},        // minus
     {"\\*", '*'},      // multiply
     {"/", '/'},        // divide
-    {"(", '('},        // left parentheses
-    {")", ')'},        // right parentheses
+    {"\\(", '('},        // left parentheses
+    {"\\)", ')'},        // right parentheses
 
     {"==", TK_EQ},          // equal
     {"^[1-9]\\d*", TK_DEC}, // decimal
