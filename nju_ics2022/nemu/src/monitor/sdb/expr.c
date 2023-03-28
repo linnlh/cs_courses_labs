@@ -125,16 +125,18 @@ static bool make_token(char *e)
         case '(':
         case ')':
           tokens[nr_token].type = rules[i].token_type;
+          nr_token++;
           break;
         case TK_DEC:
           tokens[nr_token].type = TK_DEC;
           assert(substr_len < 32);
           strncpy(tokens[nr_token].str, substr_start, substr_len);
+          nr_token++;
         default:
           break;
         }
 
-        nr_token++;
+        break;
       }
     }
 
