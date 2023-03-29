@@ -147,7 +147,9 @@ static int cmd_x(char *args) {
 
 static int cmd_p(char *args) {
   bool succse;
-  expr(args, &succse);
+  word_t val = expr(args, &succse);
+  printf("%"PRIx64 "\n", val);
+
   return 0;
 }
 
