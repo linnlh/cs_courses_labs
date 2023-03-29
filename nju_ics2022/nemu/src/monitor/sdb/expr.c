@@ -195,7 +195,7 @@ word_t eval(int p, int q)
          * Return the value of the number.
          */
         word_t num;
-        sscanf(tokens[p].str, "%"PRIx64, &num);
+        sscanf(tokens[p].str, "%"PRIu64, &num);
 
         return num;
     }
