@@ -55,7 +55,7 @@ static struct rule
     {"\\)", ')', 0},      // right parentheses
 
     {"==", TK_EQ, 0},          // equal
-    {"^[\\+]{0,1}(\\d+)$", TK_DEC, 0}, // decimal
+    {"^[1-9]\\d*$", TK_DEC, 0}, // decimal
 };
 
 #define NR_REGEX ARRLEN(rules)
