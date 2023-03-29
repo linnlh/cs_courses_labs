@@ -195,7 +195,7 @@ word_t eval(int p, int q)
          */
         word_t num;
         sscanf(tokens[p].str, "%"PRIx64, &num);
-        Log("%"PRIx64, num);
+
         return num;
     }
     else if (check_parentheses(p, q) == true)
@@ -209,8 +209,10 @@ word_t eval(int p, int q)
     {
         int32_t op = find_main_op(p, q);
 
-        int32_t val1 = eval(p, op - 1);
-        int32_t val2 = eval(op + 1, q);
+        word_t val1 = eval(p, op - 1);
+        word_t val2 = eval(op + 1, q);
+
+        Log("val1: %"PRIx64 " val2: %"PRIx64 " op: %d", val1, val2, op);
 
         switch (tokens[op].type)
         {
