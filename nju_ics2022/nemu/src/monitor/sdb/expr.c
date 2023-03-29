@@ -195,6 +195,7 @@ word_t eval(int p, int q)
          */
         word_t num;
         sscanf(tokens[p].str, "%"PRIx64, &num);
+        Log("%"PRIx64, num);
         return num;
     }
     else if (check_parentheses(p, q) == true)
