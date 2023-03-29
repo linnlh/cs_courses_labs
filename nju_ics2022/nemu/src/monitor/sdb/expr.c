@@ -213,7 +213,7 @@ word_t eval(int p, int q)
         word_t val1 = eval(p, op - 1);
         word_t val2 = eval(op + 1, q);
 
-        Log("val1: %"PRIx64 " val2: %"PRIx64 " op: %d", val1, val2, tokens[op].type);
+        Log("val1: %"PRIu64 " val2: %"PRIu64 " op: %d", val1, val2, tokens[op].type);
 
         switch (tokens[op].type)
         {
