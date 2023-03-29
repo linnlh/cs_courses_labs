@@ -37,6 +37,8 @@ static struct rule
 {
     const char *regex;
     int token_type;
+
+    // NOTE(linlianhui): Add priority to token for eval.
     int priority;
 } rules[] = {
 
@@ -53,7 +55,7 @@ static struct rule
     {"\\)", ')', 0},      // right parentheses
 
     {"==", TK_EQ, 0},          // equal
-    {"^[1-9]\\d*$", TK_DEC, 0}, // decimal
+    {"^[+]{0,1}(\\d+)$", TK_DEC, 0}, // decimal
 };
 
 #define NR_REGEX ARRLEN(rules)
