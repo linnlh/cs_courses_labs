@@ -240,6 +240,7 @@ word_t expr(char *e, bool *success)
     }
 
     word_t val = eval(0, nr_token - 1);
+    printf("%"PRIu64 "\n", val);
 
     return val;
 }
