@@ -183,7 +183,6 @@ int find_main_op(int p, int q)
 
 word_t eval(int p, int q)
 {
-    Log("p: %d, q: %d", p, q);
     if (p > q)
     {
         return -1;
@@ -213,8 +212,6 @@ word_t eval(int p, int q)
         word_t val1 = eval(p, op - 1);
         word_t val2 = eval(op + 1, q);
 
-        Log("val1: %"PRIu64 " val2: %"PRIu64 " op: %d", val1, val2, tokens[op].type);
-
         switch (tokens[op].type)
         {
         case '+':
@@ -241,7 +238,6 @@ word_t expr(char *e, bool *success)
     }
 
     word_t val = eval(0, nr_token - 1);
-    printf("%"PRIu64 "\n", val);
 
     return val;
 }
