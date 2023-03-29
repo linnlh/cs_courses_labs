@@ -183,6 +183,7 @@ int find_main_op(int p, int q)
 
 word_t eval(int p, int q)
 {
+    Log("p: %d, q: %d", p, q);
     if (p > q)
     {
         return -1;
