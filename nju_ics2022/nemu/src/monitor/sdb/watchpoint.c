@@ -107,7 +107,7 @@ void wp_display() {
   }
 
   WP* f = free_;
-  while(p != NULL) {
+  while(f != NULL) {
     printf("%-15dfree           %c\n", f->NO, f->expr[0]);
     f = f->next;
   }
