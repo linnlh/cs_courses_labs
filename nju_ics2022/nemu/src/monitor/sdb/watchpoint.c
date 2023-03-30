@@ -72,6 +72,10 @@ WP* allocate_wp() {
 }
 
 void free_wp(WP *wp) {
+  memset(wp->expr, 0, sizeof(wp->expr));
+  wp->old_value = 0;
+  wp->new_value = 0;
+  
   if(wp == head) {
     head = wp->next;
   }
