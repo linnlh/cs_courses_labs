@@ -130,11 +130,10 @@ static int cmd_info(char *args) {
     isa_reg_display();
   }
   else if(strcmp(arg, "w") == 0) {
-    printf("Num       Type      What\n");
+    wp_display();
   }
   else {
     Log("Wrong argument, %s", arg);
-    assert(0);
   }
   return 0;
 }
@@ -164,7 +163,9 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_w(char *args) {
-  return -1;
+  new_wp(args);
+
+  return 0;
 }
 
 static int cmd_d(char *args) {
@@ -172,7 +173,7 @@ static int cmd_d(char *args) {
   int num;
   sscanf(arg, "%d", &num);
 
-  delete_watchpoint(num);
+  del_wp(num);
 
   return 0;
 }

@@ -22,6 +22,7 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
+  char* expr;
 
 } WP;
 
@@ -33,6 +34,7 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
+    wp_pool[i].expr = NULL;
   }
 
   head = NULL;
@@ -49,7 +51,7 @@ WP* find_wp(int no) {
   return p;
 }
 
-WP* new_wp() {
+WP* allocate_wp() {
   if(free_ == NULL) {
     Log("There is no free watchpoint in the pool.");
     assert(0);
@@ -80,12 +82,25 @@ void free_wp(WP *wp) {
   free_ = wp;
 }
 
-void delete_watchpoint(int no) {
+void new_wp(char *expr) {
+  WP* wp = allocate_wp();
+  wp->expr = expr;
+}
+
+void del_wp(int no) {
   WP* wp = find_wp(no);
-  
+
   if(wp == NULL)
     Log("watchpoint %d is not exist.", no);
   else
     free_wp(wp);
+}
+
+void wp_display() {
+  printf("Num            Type           What\n");
+  WP* p = head;
+  while(p != NULL) {
+    printf("%15dwatchpoint     %s\n", p->NO, p->expr);
+  }
 }
 

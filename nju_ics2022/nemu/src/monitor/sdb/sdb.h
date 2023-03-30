@@ -20,6 +20,8 @@
 
 word_t expr(char *e, bool *success);
 
-void delete_watchpoint(int no);
+void del_wp(int no);
+void new_wp(char *expr);
+void wp_display();
 
 #endif
