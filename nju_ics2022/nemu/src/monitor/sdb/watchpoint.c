@@ -106,12 +106,10 @@ void wp_display() {
     printf("%-15dwatchpoint     %c\n", p->NO, p->expr[0]);
     p = p->next;
   }
-  Log("here");
+
   WP* f = free_;
-  Log("here2");
   while(f != NULL) {
-    Log("here3");
-    printf("%-15dfree           %c\n", f->NO, f->expr[0]);
+    printf("%-15dfree           null\n", f->NO);
     f = f->next;
   }
 }
