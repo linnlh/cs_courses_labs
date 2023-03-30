@@ -100,7 +100,8 @@ void wp_display() {
   printf("Num            Type           What\n");
   WP* p = head;
   while(p != NULL) {
-    printf("%15dwatchpoint     %s\n", p->NO, p->expr);
+    printf("%-15dwatchpoint     %s\n", p->NO, p->expr);
+    p = p->next;
   }
 }
 
