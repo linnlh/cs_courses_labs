@@ -163,7 +163,6 @@ static int cmd_p(char *args) {
 }
 
 static int cmd_w(char *args) {
-  printf("%s\n", args);
   new_wp(args);
 
   return 0;

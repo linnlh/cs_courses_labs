@@ -24,6 +24,8 @@ typedef struct watchpoint {
 
   /* TODO: Add more members if necessary */
   char expr[128];
+  word_t old_value;
+  word_t new_value;
 
 } WP;
 
@@ -35,6 +37,8 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
+    wp_pool[i].old_value = 0;
+    wp_pool[i].new_value = 0;
   }
 
   head = NULL;
