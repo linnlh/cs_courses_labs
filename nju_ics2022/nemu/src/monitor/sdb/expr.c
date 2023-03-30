@@ -209,7 +209,7 @@ word_t eval(int p, int q)
             else
                 num = isa_reg_str2val(tokens[p].str + 1, &success);
         }
-        Log("%lu", num);
+
         return num;
     }
     else if (check_parentheses(p, q) == true)

@@ -38,7 +38,6 @@ word_t isa_reg_str2val(const char *s, bool *success) {
 
   int idx;
   for(idx = 0; idx < 32; ++idx) {
-    Log("%s   %s", regs[idx], s);
     if(strcmp(regs[idx], s) == 0)
       break;
   }
