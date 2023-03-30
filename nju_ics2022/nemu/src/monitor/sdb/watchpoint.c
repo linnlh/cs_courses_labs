@@ -102,7 +102,7 @@ void wp_display() {
   WP* p = head;
 
   while(p != NULL) {
-    printf("%-15dwatchpoint     %c\n", p->NO, p->expr[0]);
+    printf("%-15dwatchpoint     %s\n", p->NO, p->expr);
     p = p->next;
   }
 
