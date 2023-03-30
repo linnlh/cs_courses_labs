@@ -24,8 +24,7 @@ typedef struct watchpoint {
 
   /* TODO: Add more members if necessary */
   char expr[128];
-  word_t old_value;
-  word_t new_value;
+  word_t val;
 
 } WP;
 
@@ -37,8 +36,7 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
-    wp_pool[i].old_value = 0;
-    wp_pool[i].new_value = 0;
+    wp_pool[i].val = 0;
   }
 
   head = NULL;
@@ -73,8 +71,7 @@ WP* allocate_wp() {
 
 void free_wp(WP *wp) {
   memset(wp->expr, 0, sizeof(wp->expr));
-  wp->old_value = 0;
-  wp->new_value = 0;
+  wp->val = 0;
 
   if(wp == head) {
     head = wp->next;
@@ -117,14 +114,18 @@ void wp_display() {
   }
 }
 
-bool is_wp_changed() {
+bool check_wp_is_changed() {
   bool is_changed = false;
   bool success;
 
   for(WP *p = head; p != NULL; p = p->next) {
     word_t val = expr(p->expr, &success);
-    if(val != p->old_value) {
+    if(val != p->val) {
+      printf("watchpoint %d: %s\n\n", p->NO, p->expr);
+      printf("Old value = %lu\n", p->val);
+      printf("New value = %lu\n", val);
 
+      p->val = val;
       is_changed = true;
     }
   }

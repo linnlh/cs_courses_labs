@@ -24,6 +24,6 @@ void del_wp(int no);
 void new_wp(char *expr);
 void wp_display();
 
-bool is_wp_changed();
+bool check_wp_is_changed();
 
 #endif

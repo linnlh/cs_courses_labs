@@ -31,6 +31,7 @@ static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
 void device_update();
+bool check_wp_is_changed();
 
 static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #ifdef CONFIG_ITRACE_COND
@@ -40,7 +41,9 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 
 #ifdef CONFIG_CC_WATCHPOINT
-  Log("Define watchpoint option.");
+  if(check_wp_is_changed()) {
+    nemu_state.state = NEMU_STOP;
+  }
 #endif
 }
 
