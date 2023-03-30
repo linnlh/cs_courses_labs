@@ -90,6 +90,8 @@ void free_wp(WP *wp) {
 void new_wp(char *expr) {
   WP* wp = allocate_wp();
   strcpy(wp->expr, expr);
+
+  printf("watchpoint %d: %s\n", wp->NO, wp->expr);
 }
 
 void del_wp(int no) {
