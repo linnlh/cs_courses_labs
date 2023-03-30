@@ -130,7 +130,7 @@ static int cmd_info(char *args) {
     isa_reg_display();
   }
   else if(strcmp(arg, "w") == 0) {
-    Log("info watchpoints.");
+    printf("Num       Type      What\n");
   }
   else {
     Log("Wrong argument, %s", arg);

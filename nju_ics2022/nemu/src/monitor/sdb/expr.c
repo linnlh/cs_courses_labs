@@ -23,14 +23,16 @@
 enum
 {
     TK_NOTYPE = 256,
-    TK_EQ = 1,
+    TK_EQ = 1,  // ==
 
     // NOTE(linlianhui): Add element type
-    TK_OP = 2,
-    TK_OCT = 3,
-    TK_DEC = 4,
-    TK_HEX = 5,
-    TK_PAREN = 6,
+    TK_NEQ = 2, // !=
+    TK_AND = 3, // &&
+    TK_DEREF = 4,   // *
+    TK_OCT = 5,
+    TK_DEC = 6,
+    TK_HEX = 7,
+    TK_REG = 8,
 };
 
 static struct rule
@@ -56,6 +58,8 @@ static struct rule
 
     {"==", TK_EQ, 0},          // equal
     {"[0-9]+", TK_DEC, 0}, // decimal
+    {"0x", TK_HEX, 0},
+    {"\\$\\w+", TK_REG, 0},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -131,8 +135,9 @@ static bool make_token(char *e)
                     nr_token++;
                     break;
                 case TK_DEC:
-                    tokens[nr_token].type = TK_DEC;
-                    assert(substr_len < 32);
+                case TK_REG:
+                    assert(nr_token < 32);
+                    tokens[nr_token].type = rules[i].token_type;
                     strncpy(tokens[nr_token].str, substr_start, substr_len);
                     nr_token++;
                 default:
@@ -189,12 +194,18 @@ word_t eval(int p, int q)
     }
     else if (p == q)
     {
-        /* Single token.
-         * For now this token should be a number.
-         * Return the value of the number.
-         */
         word_t num;
-        sscanf(tokens[p].str, "%"PRIu64, &num);
+        
+        if(tokens[p].type == TK_DEC) {
+            sscanf(tokens[p].str, "%lu", &num);
+        }
+        else if(tokens[p].type == TK_HEX) {
+            sscanf(tokens[p].str, "%lx", &num);
+        }
+        else if(tokens[p].type == TK_REG) {
+            bool success;
+            num = isa_reg_str2val(tokens[p].str, &success);
+        }
 
         return num;
     }
