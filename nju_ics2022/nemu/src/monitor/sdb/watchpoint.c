@@ -75,7 +75,7 @@ void free_wp(WP *wp) {
   memset(wp->expr, 0, sizeof(wp->expr));
   wp->old_value = 0;
   wp->new_value = 0;
-  
+
   if(wp == head) {
     head = wp->next;
   }
@@ -115,6 +115,19 @@ void wp_display() {
     printf("%-15dwatchpoint     %s\n", p->NO, p->expr);
     p = p->next;
   }
-
 }
 
+bool is_wp_changed() {
+  bool is_changed = false;
+  bool success;
+
+  for(WP *p = head; p != NULL; p = p->next) {
+    word_t val = expr(p->expr, &success);
+    if(val != p->old_value) {
+
+      is_changed = true;
+    }
+  }
+
+  return is_changed;
+}
