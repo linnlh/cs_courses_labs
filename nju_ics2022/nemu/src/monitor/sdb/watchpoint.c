@@ -100,10 +100,16 @@ void del_wp(int no) {
 void wp_display() {
   printf("Num            Type           What\n");
   WP* p = head;
-  printf("head: %s\n", head->expr);
+
   while(p != NULL) {
     printf("%-15dwatchpoint     %c\n", p->NO, p->expr[0]);
     p = p->next;
+  }
+
+  WP* f = free_;
+  while(p != NULL) {
+    printf("%-15dfree           %c\n", f->NO, f->expr[0]);
+    f = f->next;
   }
 }
 
