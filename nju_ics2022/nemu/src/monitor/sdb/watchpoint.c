@@ -85,6 +85,7 @@ void free_wp(WP *wp) {
 void new_wp(char *expr) {
   WP* wp = allocate_wp();
   wp->expr = expr;
+  printf("in new wp: %s\n", wp->expr);
 }
 
 void del_wp(int no) {
