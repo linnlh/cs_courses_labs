@@ -59,6 +59,7 @@ WP* allocate_wp() {
 
   WP* node = free_;
   free_ = free_->next;
+  assert(free_ != NULL);
 
   node->next = head;
   head = node;
