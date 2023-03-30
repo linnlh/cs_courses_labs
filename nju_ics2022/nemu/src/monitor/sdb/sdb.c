@@ -161,23 +161,31 @@ static int cmd_x(char *args) {
 static int cmd_p(char *args) {
   bool succse;
   word_t val = expr(args, &succse);
-  printf("%"PRIu64 "\n", val);
+  printf(FMT_WORD_DEC "\n", val);
 
   return 0;
 }
 
 static int cmd_w(char *args) {
+#ifdef CONFIG_CC_WATCHPOINT
   new_wp(args);
+#elif
+  printf("You should turn on watchpoint config first!\n");
+#endif
 
   return 0;
 }
 
 static int cmd_d(char *args) {
+#ifdef CONFIG_CC_WATCHPOINT
   char *arg = strtok(NULL, " ");
   int num;
   sscanf(arg, "%d", &num);
 
   del_wp(num);
+#elif
+  printf("You should turn on watchpoint config first!\n");
+#endif
 
   return 0;
 }

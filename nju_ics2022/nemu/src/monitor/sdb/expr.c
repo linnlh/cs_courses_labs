@@ -197,10 +197,10 @@ word_t eval(int p, int q)
         word_t num;
 
         if(tokens[p].type == TK_DEC) {
-            sscanf(tokens[p].str, "%lu", &num);
+            sscanf(tokens[p].str, FMT_WORD_DEC, &num);
         }
         else if(tokens[p].type == TK_HEX) {
-            sscanf(tokens[p].str, "%lx", &num);
+            sscanf(tokens[p].str, "0x%lx", &num);
         }
         else if(tokens[p].type == TK_REG) {
             bool success;
