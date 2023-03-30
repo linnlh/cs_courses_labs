@@ -168,7 +168,13 @@ static int cmd_w(char *args) {
 }
 
 static int cmd_d(char *args) {
-  return -1;
+  char *arg = strtok(NULL, " ");
+  int num;
+  sscanf(arg, "%d", &num);
+
+  delete_watchpoint(num);
+
+  return 0;
 }
 
 void sdb_set_batch_mode() {

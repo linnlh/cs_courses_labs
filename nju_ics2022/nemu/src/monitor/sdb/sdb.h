@@ -20,4 +20,6 @@
 
 word_t expr(char *e, bool *success);
 
+void delete_watchpoint(int no);
+
 #endif
