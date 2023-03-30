@@ -20,10 +20,4 @@
 
 word_t expr(char *e, bool *success);
 
-void del_wp(int no);
-void new_wp(char *expr);
-void wp_display();
-
-bool check_wp_is_changed();
-
 #endif
