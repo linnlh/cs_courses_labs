@@ -48,6 +48,9 @@ typedef uint16_t ioaddr_t;
 #define FMT_UINT32_DEC "%"PRIu32
 #define FMT_UINT32_HEX "0x%08"PRIx32
 
+#define WORD_DEC MUXDEF(CONFIG_ISA64, "%"PRIu64, "%"PRIu32)
+#define WORD_HEX MUXDEF(CONFIG_ISA64, "0x%"PRIx64, "0x%"PRIx32)
+
 #include <debug.h>
 
 #endif
