@@ -16,12 +16,15 @@
 #include "sdb.h"
 
 #define NR_WP 32
+#define NR_EXPR 128
 
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
+  char expr[128];
+  word_t val;
 
 } WP;
 
@@ -33,6 +36,7 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
+    wp_pool[i].val = 0;
   }
 
   head = NULL;
@@ -41,3 +45,89 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
+WP* find_wp(int no) {
+  WP* p = head;
+  while(p != NULL && p->NO != no)
+    p = p->next;
+
+  return p;
+}
+
+WP* new_wp(char *expr_str) {
+  if(free_ == NULL) {
+    Log("There is no free watchpoint in the pool.");
+    return NULL;
+  }
+
+  bool success;
+  word_t val = expr(expr_str, &success);
+  if(!success) {
+    Log("Expression is not evaluable.");
+    return NULL;
+  }
+
+  WP* wp = free_;
+  wp->next = head;
+  free_ = free_->next;
+  head = wp;
+
+  strcpy(wp->expr, expr_str);
+  wp->val = val;
+  printf("watchpoint %d: %s\n", wp->NO, wp->expr);
+
+  return wp;
+}
+
+void free_wp(int no) {
+  WP* wp = find_wp(no);
+  if(wp == NULL) {
+    Log("watchpoint %d is not exist.", no);
+    return;
+  }
+
+  memset(wp->expr, 0, sizeof(wp->expr));
+  wp->val = 0;
+
+  if(wp == head) {
+    head = wp->next;
+  }
+  else {
+    WP* p = head;
+    while(p->next != wp)
+      p = p->next;
+    
+    p->next = wp->next;
+  }
+
+  wp->next = free_;
+  free_ = wp;
+}
+
+void wp_display() {
+  printf("Num            Type           What\n");
+  WP* p = head;
+
+  while(p != NULL) {
+    printf("%-15dwatchpoint     %s\n", p->NO, p->expr);
+    p = p->next;
+  }
+}
+
+bool check_wp_is_changed() {
+  bool is_changed = false;
+  bool success;
+
+  for(WP *p = head; p != NULL; p = p->next) {
+    word_t val = expr(p->expr, &success);
+    if(success && val != p->val) {
+      printf("watchpoint %d: %s\n\n", p->NO, p->expr);
+      printf("Old value = %lu\n", p->val);
+      printf("New value = %lu\n\n", val);
+
+      p->val = val;
+      is_changed = true;
+    }
+  }
+
+  return is_changed;
+}

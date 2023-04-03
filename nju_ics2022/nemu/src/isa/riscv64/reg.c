@@ -24,8 +24,28 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
+  printf("pc        0x%016"PRIx64 "     " "%"PRIu64 "\n", cpu.pc, cpu.pc);
+  for(int idx = 0; idx < 32; ++idx) {
+    printf("%-10s" "0x%016"PRIx64 "     " "%"PRIu64 "\n", regs[idx], cpu.gpr[idx], cpu.gpr[idx]);
+  }
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
-  return 0;
+  *success = true;
+  if(strcmp(s, "pc") == 0)
+    return cpu.pc;
+
+  int idx = 0;
+  while(idx != 32) {
+    if(strcmp(regs[idx], s) == 0)
+      break;
+    idx++;
+  }
+  
+  if(idx == 32) {
+    *success = false;
+    return -1;
+  }
+
+  return cpu.gpr[idx];
 }

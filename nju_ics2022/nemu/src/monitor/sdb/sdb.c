@@ -19,10 +19,18 @@
 #include <readline/history.h>
 #include "sdb.h"
 
+#include <utils.h>
+#include <memory/paddr.h>
+
 static int is_batch_mode = false;
+
 
 void init_regex();
 void init_wp_pool();
+
+void new_wp(char *expr);
+void free_wp(int no);
+void wp_display();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -49,10 +57,18 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  nemu_state.state = NEMU_QUIT;
   return -1;
 }
 
 static int cmd_help(char *args);
+
+static int cmd_si(char *args);
+static int cmd_info(char *args);
+static int cmd_x(char *args);
+static int cmd_p(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
 
 static struct {
   const char *name;
@@ -63,7 +79,13 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
 
-  /* TODO: Add more commands */
+  // NOTE(linlianhui): Add new command for sdb
+  { "si", "Continue the execution of the program for N steps, the default value of N is 1", cmd_si },
+  { "info", "Print register or watchpoint information", cmd_info },
+  { "x", "Scan the memory", cmd_x },
+  { "p", "Evaluate expression's value", cmd_p },
+  { "w", "Create a watchpoint", cmd_w },
+  { "d", "Delete a watchpoint", cmd_d },
 
 };
 
@@ -89,6 +111,109 @@ static int cmd_help(char *args) {
     }
     printf("Unknown command '%s'\n", arg);
   }
+  return 0;
+}
+
+static int cmd_si(char *args) {
+  char *arg = strtok(NULL, " ");
+  int n = 1;
+
+  if(arg != NULL) {
+    sscanf(arg, "%d", &n);
+  }
+  cpu_exec(n);
+
+  return 0;
+}
+
+static int cmd_info(char *args) {
+  char *arg = strtok(NULL, " ");
+  if(strcmp(arg, "r") == 0) {
+    isa_reg_display();
+  }
+  else if(strcmp(arg, "w") == 0) {
+    wp_display();
+  }
+  else {
+    Log("Wrong argument, %s", arg);
+  }
+  return 0;
+}
+
+static int cmd_x(char *args) {
+  char * bytes_str = strtok(NULL, " ");
+  char * expr_str = strtok(NULL, " ");
+  if(bytes_str == NULL || expr_str == NULL) {
+    Log("Wrong argument!");
+  }
+  else {
+    int bytes;
+    bool success;
+    sscanf(bytes_str, "%d", &bytes);
+    paddr_t addr = expr(expr_str, &success);
+
+    if(!success) {
+      Log("Evaluation failures.");
+    }
+    else {
+      for(int i = 0; i < bytes; ++i) {
+        uint32_t * value = (uint32_t *)guest_to_host(addr);
+        printf(FMT_PADDR ":    " FMT_UINT32_HEX "\n", addr, *value);
+        addr += 4;
+      }
+    }
+  }
+
+  return 0;
+}
+
+static int cmd_p(char *args) {
+  char* expr_str = strtok(NULL, " ");
+  if(expr_str == NULL) {
+    Log("Wrong argument!");
+    return 0;
+  }
+  
+  bool success;
+  word_t val = expr(expr_str, &success);
+  if(!success)
+    Log("Evaluation failures.");
+  else
+    printf("%s = " WORD_DEC "\n", expr_str, val);
+
+  return 0;
+}
+
+static int cmd_w(char *args) {
+#ifdef CONFIG_CC_WATCHPOINT
+  char* expr_str = strtok(NULL, " ");
+  if(expr_str == NULL) {
+    Log("Wrong argument!");
+    return 0;
+  }
+  new_wp(expr_str);
+#elif
+  printf("You should turn on watchpoint config first!\n");
+#endif
+
+  return 0;
+}
+
+static int cmd_d(char *args) {
+#ifdef CONFIG_CC_WATCHPOINT
+  char *arg = strtok(NULL, " ");
+  if(arg == NULL) {
+    Log("Wrong argument!");
+  }
+  else {
+    int num;
+    sscanf(arg, "%d", &num);
+    free_wp(num);
+  }
+#elif
+  printf("You should turn on watchpoint config first!\n");
+#endif
+
   return 0;
 }
 
