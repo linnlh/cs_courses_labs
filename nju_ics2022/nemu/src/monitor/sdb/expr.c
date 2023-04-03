@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 #include <isa.h>
+#include <memory/paddr.h>
 
 /* We use the POSIX regex functions to process regular expressions.
  * Type 'man regex' for more information about POSIX regex functions.
@@ -40,26 +41,24 @@ static struct rule
     const char *regex;
     int token_type;
 
-    // NOTE(linlianhui): Add priority to token for eval.
-    int priority;
 } rules[] = {
 
     /* TODO: Add more rules.
      * Pay attention to the precedence level of different rules.
      */
 
-    {" +", TK_NOTYPE, 0}, // spaces
-    {"\\+", '+', 1},      // plus
-    {"-", '-', 1},        // minus
-    {"\\*", '*', 2},      // multiply
-    {"/", '/', 2},        // divide
-    {"\\(", '(', 0},      // left parentheses
-    {"\\)", ')', 0},      // right parentheses
+    {" +", TK_NOTYPE}, // spaces
+    {"\\+", '+'},      // plus
+    {"-", '-'},        // minus
+    {"\\*", '*'},      // multiply
+    {"/", '/'},        // divide
+    {"\\(", '('},      // left parentheses
+    {"\\)", ')'},      // right parentheses
 
-    {"==", TK_EQ, 0},          // equal
-    {"[0-9]+", TK_DEC, 0}, // decimal
-    {"0x", TK_HEX, 0},
-    {"\\$\\w+", TK_REG, 0},
+    {"==", TK_EQ},          // equal
+    {"[0-9]+", TK_DEC}, // decimal
+    {"0x", TK_HEX},
+    {"\\$\\w+", TK_REG},
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -158,6 +157,41 @@ static bool make_token(char *e)
     return true;
 }
 
+/**
+ * Check if op_type is a operator.
+*/
+bool is_operator(int op_type) {
+    return (op_type == '+' ||
+            op_type == '-' ||
+            op_type == '*' ||
+            op_type == '/' ||
+            op_type == TK_DEREF);
+}
+
+/**
+ * Get the operator's priority, 
+ * The smaller value is, the higher priority are.
+*/
+int get_priority(int op_type) {
+    switch (op_type)
+    {
+    case -1:
+        return -1;
+    case TK_DEREF:
+        return 1;
+    case '*':
+    case '/':
+        return 2;
+    case '+':
+    case '-':
+        return 3;
+    default:
+        Log("Don't support this operator.");
+        Log("Op Type: %d", op_type);
+        assert(0);
+    }
+}
+
 bool check_parentheses(int p, int q)
 {
     return (tokens[p].type == '(' && tokens[q].type == ')');
@@ -165,25 +199,28 @@ bool check_parentheses(int p, int q)
 
 int find_main_op(int p, int q)
 {
-    int cur_op = -1;
-    for(int idx = p; idx <= q; ++idx) {
-        switch (tokens[idx].type)
-        {
-        case '+':
-        case '-':
-            if(cur_op == -1 || tokens[cur_op].type == '+' || tokens[cur_op].type == '-')
-            cur_op = idx;
-            break;
-        case '*':
-        case '/':
-            cur_op = idx;
-            break;
-        default:
-            break;
+    int main_op_idx = -1;
+    int idx = p;
+    while(idx <= q) {
+        int op_type = tokens[idx].type;
+        if(op_type == '(') {
+            int cnt = 0;
+            while(idx <= q && cnt != 0) {
+                op_type = tokens[idx].type;
+                if(op_type == '(') cnt++;
+                if(op_type == ')') cnt--;
+                idx++;
+            }
+        }
+        else {
+            if(is_operator(op_type) && get_priority(main_op_idx) < get_priority(op_type)) {
+                main_op_idx = idx;
+            }
+            idx++;
         }
     }
 
-    return cur_op;
+    return main_op_idx;
 }
 
 word_t eval(int p, int q)
@@ -214,50 +251,30 @@ word_t eval(int p, int q)
     }
     else if (check_parentheses(p, q) == true)
     {
-        /* The expression is surrounded by a matched pair of parentheses.
-         * If that is the case, just throw away the parentheses.
-         */
         return eval(p + 1, q - 1);
-    }
-    else if(tokens[p].type == TK_DEREF) {
-        int cnt = 0;
-        int idx;
-        for(idx = p + 1; idx <= q; ++idx) {
-            if(tokens[p].type == '(')
-                cnt++;
-            else if(tokens[p].type == ')')
-                cnt--;
-            
-            if(cnt == 0)
-                break;
-        }
-        return 0;
-        // paddr_t addr = eval(p + 1, idx);
-        // uint32_t* value = (uint32_t*)guest_to_host(address);
-        
     }
     else
     {
         int32_t op = find_main_op(p, q);
+        word_t val1 = eval(op + 1, q);
 
         if(tokens[op].type == TK_DEREF) {
-            
+            word_t* value = (word_t*)guest_to_host(val1);
+            return *value;
         }
 
-        word_t val1 = eval(p, op - 1);
-        word_t val2 = eval(op + 1, q);
+        word_t val2 = eval(p, op - 1);
 
         switch (tokens[op].type)
         {
         case '+':
-            return val1 + val2;
+            return val2 + val1;
         case '-':
-            return val1 - val2;
+            return val2 - val1;
         case '*':
-            return val1 * val2;
+            return val2 * val1;
         case '/':
-            return val1 / val2;
-
+            return val2 / val1;
         default:
             assert(0);
         }
