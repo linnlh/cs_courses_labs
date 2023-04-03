@@ -115,14 +115,12 @@ static int cmd_help(char *args) {
 }
 
 static int cmd_si(char *args) {
-  // extract the first argument
   char *arg = strtok(NULL, " ");
-  uint64_t n = 1;
+  int n = 1;
 
   if(arg != NULL) {
-    sscanf(arg, "%lu", &n);
+    sscanf(arg, "%d", &n);
   }
-
   cpu_exec(n);
 
   return 0;
@@ -146,7 +144,7 @@ static int cmd_x(char *args) {
   char * bytes_str = strtok(NULL, " ");
   char * addr_str = strtok(NULL, " ");
   if(bytes_str == NULL || addr_str == NULL) {
-    Log("Wrong format!");
+    Log("Wrong argument!");
   }
   else {
     paddr_t addr;
@@ -156,7 +154,7 @@ static int cmd_x(char *args) {
 
     for(int i = 0; i < bytes; ++i) {
       uint32_t * value = (uint32_t *)guest_to_host(addr);
-      printf(FMT_PADDR ":   0x%08u" "\n", addr, *value);
+      printf(FMT_PADDR ":   0x%08x" "\n", addr, *value);
       addr += 4;
     }
   }
