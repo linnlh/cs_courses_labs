@@ -56,8 +56,8 @@ static struct rule
     {"\\)", ')'},      // right parentheses
 
     {"==", TK_EQ},          // equal
-    {"[0-9]+", TK_DEC}, // decimal
     {"^0x[0-9]+", TK_HEX},
+    {"[0-9]+", TK_DEC}, // decimal
     {"\\$\\w+", TK_REG},
 };
 
