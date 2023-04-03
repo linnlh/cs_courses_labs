@@ -149,6 +149,9 @@ static int cmd_x(char *args) {
   paddr_t address;
   sscanf(arg, FMT_PADDR, &address);
 
+  word_t* test = (word_t*)guest_to_host(address);
+  printf("test: %lu\n", *test);
+
   for(int i = 0; i < 4; ++i) {
     uint32_t* value = (uint32_t*)guest_to_host(address);
     printf("0x%08"PRIx32 "\n", *value);
