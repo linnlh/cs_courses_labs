@@ -143,8 +143,10 @@ static bool make_token(char *e) {
             break;
           case TK_REG:
             tokens[nr_token].type = rules[i].token_type;
-            if(substr_len != 2 || strncmp(substr_start, "$0", 2) == 0)
+            if(substr_len != 2 || strncmp(substr_start, "$0", 2) == 0) {
               substr_start += 1;
+              substr_len   -= 1;
+            }
 
             strncpy(tokens[nr_token].str, substr_start, substr_len);
             nr_token++;
