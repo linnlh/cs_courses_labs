@@ -142,15 +142,15 @@ static int cmd_info(char *args) {
 
 static int cmd_x(char *args) {
   char * bytes_str = strtok(NULL, " ");
-  char * addr_str = strtok(NULL, " ");
-  if(bytes_str == NULL || addr_str == NULL) {
+  char * expr_str = strtok(NULL, " ");
+  if(bytes_str == NULL || expr_str == NULL) {
     Log("Wrong argument!");
   }
   else {
-    paddr_t addr;
     int bytes;
+    bool success;
     sscanf(bytes_str, "%d", &bytes);
-    sscanf(addr_str, FMT_PADDR, &addr);
+    paddr_t addr = expr(expr_str, &success);
 
     for(int i = 0; i < bytes; ++i) {
       uint32_t * value = (uint32_t *)guest_to_host(addr);
