@@ -145,6 +145,7 @@ static int cmd_info(char *args) {
 static int cmd_x(char *args) {
   char *arg = strtok(NULL, " ");
   arg = strtok(NULL, " ");
+  printf("arg: %s\n", arg);
 
   paddr_t address;
   sscanf(arg, FMT_PADDR, &address);
