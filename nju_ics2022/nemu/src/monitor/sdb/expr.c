@@ -199,7 +199,7 @@ bool check_parentheses(int p, int q)
 
 int find_main_op(int p, int q)
 {
-    Log("p: %d  q: %d", p, q);
+    int main_op_type = -1;
     int main_op_idx = -1;
     int idx = p;
     while(idx <= q) {
@@ -216,9 +216,9 @@ int find_main_op(int p, int q)
         }
         else {
             if(is_operator(op_type) && 
-               get_priority(tokens[main_op_idx].type) < get_priority(op_type)) {
+               get_priority(main_op_type) < get_priority(op_type)) {
                 main_op_idx = idx;
-                Log("cur: %d  op_type: %d", main_op_idx, op_type);
+                main_op_type = op_type;
             }
             idx++;
         }
