@@ -218,6 +218,7 @@ int find_main_op(int p, int q)
             if(is_operator(op_type) && 
                get_priority(tokens[main_op_idx].type) < get_priority(op_type)) {
                 main_op_idx = idx;
+                Log("cur: %d  op_type: %d", main_op_idx, op_type);
             }
             idx++;
         }
