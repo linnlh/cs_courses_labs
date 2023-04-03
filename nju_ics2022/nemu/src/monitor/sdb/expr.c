@@ -308,6 +308,7 @@ word_t expr(char *e, bool *success)
     // Check dereference tokens
     for (int i = 0; i < nr_token; i ++) {
         if (tokens[i].type == '*' && is_deref(i)) {
+            Log("Dereference....");
             tokens[i].type = TK_DEREF;
         }
     }
