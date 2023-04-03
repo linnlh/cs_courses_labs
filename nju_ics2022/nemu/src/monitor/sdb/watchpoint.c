@@ -53,23 +53,38 @@ WP* find_wp(int no) {
   return p;
 }
 
-WP* allocate_wp() {
+WP* new_wp(char *expr_str) {
   if(free_ == NULL) {
     Log("There is no free watchpoint in the pool.");
-    assert(0);
+    return NULL;
   }
 
-  WP* node = free_;
+  bool success;
+  word_t val = expr(expr_str, &success);
+  if(!success) {
+    Log("Expression is not evaluable.");
+    return NULL;
+  }
+
+  WP* wp = free_;
+  wp->next = head;
   free_ = free_->next;
-  assert(free_ != NULL);
+  head = wp;
 
-  node->next = head;
-  head = node;
+  strcpy(wp->expr, expr_str);
+  wp->val = val;
+  printf("watchpoint %d: %s\n", wp->NO, wp->expr);
 
-  return node;
+  return wp;
 }
 
-void free_wp(WP *wp) {
+void free_wp(int no) {
+  WP* wp = find_wp(no);
+  if(wp == NULL) {
+    Log("watchpoint %d is not exist.", no);
+    return;
+  }
+
   memset(wp->expr, 0, sizeof(wp->expr));
   wp->val = 0;
 
@@ -86,22 +101,6 @@ void free_wp(WP *wp) {
 
   wp->next = free_;
   free_ = wp;
-}
-
-void new_wp(char *expr) {
-  WP* wp = allocate_wp();
-  strcpy(wp->expr, expr);
-
-  printf("watchpoint %d: %s\n", wp->NO, wp->expr);
-}
-
-void del_wp(int no) {
-  WP* wp = find_wp(no);
-
-  if(wp == NULL)
-    Log("watchpoint %d is not exist.", no);
-  else
-    free_wp(wp);
 }
 
 void wp_display() {

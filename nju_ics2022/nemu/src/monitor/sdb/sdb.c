@@ -168,19 +168,30 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_p(char *args) {
+  char* expr_str = strtok(NULL, " ");
+  if(expr_str == NULL) {
+    Log("Wrong argument!");
+    return 0;
+  }
+  
   bool success;
-  word_t val = expr(args, &success);
+  word_t val = expr(expr_str, &success);
   if(!success)
     Log("Evaluation failures.");
   else
-    printf("%s = " WORD_DEC "\n", args, val);
+    printf("%s = " WORD_DEC "\n", expr_str, val);
 
   return 0;
 }
 
 static int cmd_w(char *args) {
 #ifdef CONFIG_CC_WATCHPOINT
-  new_wp(args);
+  char* expr_str = strtok(NULL, " ");
+  if(expr_str == NULL) {
+    Log("Wrong argument!");
+    return 0;
+  }
+  new_wp(expr_str);
 #elif
   printf("You should turn on watchpoint config first!\n");
 #endif
