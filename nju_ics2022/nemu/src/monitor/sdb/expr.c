@@ -203,6 +203,7 @@ int find_main_op(int p, int q)
     int idx = p;
     while(idx <= q) {
         int op_type = tokens[idx].type;
+        Log("str: %s  op_type: %d", tokens[idx].str, op_type);
         if(op_type == '(') {
             int cnt = 0;
             while(idx <= q && cnt != 0) {
