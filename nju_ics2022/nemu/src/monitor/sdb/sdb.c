@@ -80,12 +80,12 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   // NOTE(linlianhui): Add new command for sdb
-  { "si", "Continue the execution of the program for [N] instructions, the default value for N is 1", cmd_si },
-  { "info", "Print register status or watchpoint information", cmd_info },
-  { "x", "Evaluate expression's value. Using the result as starting address and printing N continuous 4 bytes value in hex form", cmd_x },
+  { "si", "Continue the execution of the program for N steps, the default value of N is 1", cmd_si },
+  { "info", "Print register or watchpoint information", cmd_info },
+  { "x", "Scan the memory", cmd_x },
   { "p", "Evaluate expression's value", cmd_p },
-  { "w", "Pause the program when the expression's value is changed", cmd_w },
-  { "d", "Delete watchpoint whose number is N", cmd_d },
+  { "w", "Create a watchpoint", cmd_w },
+  { "d", "Delete a watchpoint", cmd_d },
 
 };
 
@@ -152,10 +152,15 @@ static int cmd_x(char *args) {
     sscanf(bytes_str, "%d", &bytes);
     paddr_t addr = expr(expr_str, &success);
 
-    for(int i = 0; i < bytes; ++i) {
-      uint32_t * value = (uint32_t *)guest_to_host(addr);
-      printf(FMT_PADDR ":   0x%08x" "\n", addr, *value);
-      addr += 4;
+    if(!success) {
+      Log("Evaluation failures.");
+    }
+    else {
+      for(int i = 0; i < bytes; ++i) {
+        uint32_t * value = (uint32_t *)guest_to_host(addr);
+        printf(FMT_PADDR ":    " FMT_UINT32_HEX "\n", addr, *value);
+        addr += 4;
+      }
     }
   }
 
@@ -163,9 +168,12 @@ static int cmd_x(char *args) {
 }
 
 static int cmd_p(char *args) {
-  bool succse;
-  word_t val = expr(args, &succse);
-  printf(FMT_WORD_DEC "\n", val);
+  bool success;
+  word_t val = expr(args, &success);
+  if(!success)
+    Log("Evaluation failures.");
+  else
+    printf(WORD_DEC "\n", val);
 
   return 0;
 }
@@ -183,10 +191,14 @@ static int cmd_w(char *args) {
 static int cmd_d(char *args) {
 #ifdef CONFIG_CC_WATCHPOINT
   char *arg = strtok(NULL, " ");
-  int num;
-  sscanf(arg, "%d", &num);
-
-  del_wp(num);
+  if(arg == NULL) {
+    Log("Wrong argument!");
+  }
+  else {
+    int num;
+    sscanf(arg, "%d", &num);
+    del_wp(num);
+  }
 #elif
   printf("You should turn on watchpoint config first!\n");
 #endif

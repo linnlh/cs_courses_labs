@@ -120,10 +120,10 @@ bool check_wp_is_changed() {
 
   for(WP *p = head; p != NULL; p = p->next) {
     word_t val = expr(p->expr, &success);
-    if(val != p->val) {
+    if(success && val != p->val) {
       printf("watchpoint %d: %s\n\n", p->NO, p->expr);
       printf("Old value = %lu\n", p->val);
-      printf("New value = %lu\n", val);
+      printf("New value = %lu\n\n", val);
 
       p->val = val;
       is_changed = true;
