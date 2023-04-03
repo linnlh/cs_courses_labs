@@ -233,7 +233,7 @@ int find_main_op(int p, int q) {
     
     idx++;
   }
-
+  Log("p: %d  q: %d  main op idx: %d  main op: %d", p, q, main_op_idx, main_op_type);
   return main_op_idx;
 }
 
