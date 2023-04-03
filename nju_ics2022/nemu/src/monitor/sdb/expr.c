@@ -219,9 +219,30 @@ word_t eval(int p, int q)
          */
         return eval(p + 1, q - 1);
     }
+    else if(tokens[p].type == TK_DEREF) {
+        int cnt = 0;
+        int idx;
+        for(idx = p + 1; idx <= q; ++idx) {
+            if(tokens[p].type == '(')
+                cnt++;
+            else if(tokens[p].type == ')')
+                cnt--;
+            
+            if(cnt == 0)
+                break;
+        }
+        return 0;
+        // paddr_t addr = eval(p + 1, idx);
+        // uint32_t* value = (uint32_t*)guest_to_host(address);
+        
+    }
     else
     {
         int32_t op = find_main_op(p, q);
+
+        if(tokens[op].type == TK_DEREF) {
+            
+        }
 
         word_t val1 = eval(p, op - 1);
         word_t val2 = eval(op + 1, q);
@@ -243,14 +264,34 @@ word_t eval(int p, int q)
     }
 }
 
+bool is_deref(int p) {
+    assert(tokens[p].type == '*');
+
+    return (p == 0 || 
+            tokens[p - 1].type == '(' || 
+            tokens[p - 1].type == '+' || 
+            tokens[p - 1].type == '-' ||
+            tokens[p - 1].type == '*' ||
+            tokens[p - 1].type == '/');
+}
+
 word_t expr(char *e, bool *success)
 {
+    // Make token
     if (!make_token(e))
     {
         *success = false;
         return 0;
     }
 
+    // Check dereference tokens
+    for (int i = 0; i < nr_token; i ++) {
+        if (tokens[i].type == '*' && is_deref(i)) {
+            tokens[i].type = TK_DEREF;
+        }
+    }
+
+    // Evaluate expression
     word_t val = eval(0, nr_token - 1);
 
     return val;
