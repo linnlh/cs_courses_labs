@@ -264,7 +264,7 @@ word_t eval(int p, int q, bool * success) {
         Log("Unknow operand.");
         *success = false;
     }
-
+    Log("num: " WORD_DEC, num);
     return num;
   }
   else if (check_parentheses(p, q) == true) {
