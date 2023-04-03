@@ -109,8 +109,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+        // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        //     i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -240,7 +240,6 @@ int find_main_op(int p, int q) {
 }
 
 word_t eval(int p, int q, bool * success) {
-  Log("success %d", *success);
   if(success == false)
     return -1;
 
@@ -262,13 +261,12 @@ word_t eval(int p, int q, bool * success) {
         break;
       case TK_REG:
         num = isa_reg_str2val(tokens[p].str, success);
-        Log("isa 2 reg: %d", *success);
         break;
       default:
         Log("Unknow operand.");
         *success = false;
     }
-    Log("num: " WORD_DEC, num);
+
     return num;
   }
   else if (check_parentheses(p, q) == true) {
