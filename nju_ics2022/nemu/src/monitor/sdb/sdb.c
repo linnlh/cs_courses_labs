@@ -148,6 +148,7 @@ static int cmd_x(char *args) {
 
   paddr_t address;
   sscanf(arg, FMT_PADDR, &address);
+  printf(FMT_PADDR "\n", address);
 
   for(int i = 0; i < 4; ++i) {
     uint32_t* value = (uint32_t*)guest_to_host(address);
