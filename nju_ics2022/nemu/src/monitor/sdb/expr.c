@@ -134,6 +134,7 @@ static bool make_token(char *e)
                     nr_token++;
                     break;
                 case TK_DEC:
+                case TK_HEX:
                 case TK_REG:
                     assert(nr_token < 32);
                     tokens[nr_token].type = rules[i].token_type;
