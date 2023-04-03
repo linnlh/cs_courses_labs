@@ -204,7 +204,6 @@ int find_main_op(int p, int q)
     int idx = p;
     while(idx <= q) {
         int op_type = tokens[idx].type;
-        Log("str: %s  op_type: %d", tokens[idx].str, op_type);
         if(op_type == '(') {
             int cnt = 0;
             while(idx <= q && cnt != 0) {
@@ -263,6 +262,7 @@ word_t eval(int p, int q)
         word_t val1 = eval(op + 1, q);
 
         if(tokens[op].type == TK_DEREF) {
+            Log("val: "FMT_WORD, val1);
             word_t* value = (word_t*)guest_to_host(val1);
             return *value;
         }
