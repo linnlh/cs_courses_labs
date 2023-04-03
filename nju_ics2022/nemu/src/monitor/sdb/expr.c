@@ -177,7 +177,7 @@ bool is_operator(int op_type) {
  * Check if '*' is dereference operator.
 */
 bool is_deref(int p) {
-  assert(tokens[p].type == '*');
+  assert(tokens[p].type == TK_MUL);
 
   return (p == 0 || 
           tokens[p - 1].type == '(' ||
