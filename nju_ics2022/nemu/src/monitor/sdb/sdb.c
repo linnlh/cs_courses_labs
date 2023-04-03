@@ -143,19 +143,22 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
-  char *arg = strtok(NULL, " ");
-  arg = strtok(NULL, " ");
+  char * bytes_str = strtok(NULL, " ");
+  char * addr_str = strtok(NULL, " ");
+  if(bytes_str == NULL || addr_str == NULL) {
+    Log("Wrong format!");
+  }
+  else {
+    paddr_t addr;
+    int bytes;
+    sscanf(bytes_str, "%d", &bytes);
+    sscanf(addr_str, FMT_PADDR, &addr);
 
-  paddr_t address;
-  sscanf(arg, FMT_PADDR, &address);
-
-  word_t* test = (word_t*)guest_to_host(address);
-  printf("test: %lu\n", *test);
-
-  for(int i = 0; i < 4; ++i) {
-    uint32_t* value = (uint32_t*)guest_to_host(address);
-    printf("0x%08"PRIx32 "\n", *value);
-    address += 4;
+    for(int i = 0; i < bytes; ++i) {
+      uint32_t * value = (uint32_t *)guest_to_host(addr);
+      printf("0x%08u" "\n", *value);
+      addr += 4;
+    }
   }
 
   return 0;
