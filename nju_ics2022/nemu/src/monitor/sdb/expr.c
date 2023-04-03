@@ -57,7 +57,7 @@ static struct rule
 
     {"==", TK_EQ},          // equal
     {"[0-9]+", TK_DEC}, // decimal
-    {"0x", TK_HEX},
+    {"0x[0-9]+", TK_HEX},
     {"\\$\\w+", TK_REG},
 };
 
