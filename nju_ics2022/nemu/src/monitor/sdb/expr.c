@@ -199,6 +199,7 @@ bool check_parentheses(int p, int q)
 
 int find_main_op(int p, int q)
 {
+    Log("p: %d  q: %d", p, q);
     int main_op_type = -1;
     int main_op_idx = -1;
     int idx = p;
