@@ -238,6 +238,7 @@ int find_main_op(int p, int q) {
 }
 
 word_t eval(int p, int q, bool * success) {
+  Log("success %d", *success);
   if(success == false)
     return -1;
 
