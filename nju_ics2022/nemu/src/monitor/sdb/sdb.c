@@ -28,8 +28,8 @@ static int is_batch_mode = false;
 void init_regex();
 void init_wp_pool();
 
-void del_wp(int no);
 void new_wp(char *expr);
+void free_wp(int no);
 void wp_display();
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
@@ -208,7 +208,7 @@ static int cmd_d(char *args) {
   else {
     int num;
     sscanf(arg, "%d", &num);
-    del_wp(num);
+    free_wp(num);
   }
 #elif
   printf("You should turn on watchpoint config first!\n");
