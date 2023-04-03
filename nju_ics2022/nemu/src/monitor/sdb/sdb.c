@@ -173,7 +173,7 @@ static int cmd_p(char *args) {
   if(!success)
     Log("Evaluation failures.");
   else
-    printf(WORD_DEC "\n", val);
+    printf("%s = " WORD_DEC "\n", args, val);
 
   return 0;
 }
