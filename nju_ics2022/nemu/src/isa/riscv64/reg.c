@@ -32,7 +32,7 @@ void isa_reg_display() {
 
 word_t isa_reg_str2val(const char *s, bool *success) {
   *success = true;
-
+  Log("isa 2 reg: %s", s);
   if(strcmp(s, "pc") == 0)
     return cpu.pc;
 
