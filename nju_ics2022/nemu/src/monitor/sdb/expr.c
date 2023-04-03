@@ -222,7 +222,7 @@ int find_main_op(int p, int q)
             idx++;
         }
     }
-
+    Log("main op idx: %d", main_op_idx);
     return main_op_idx;
 }
 
