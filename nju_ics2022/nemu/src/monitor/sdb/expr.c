@@ -260,6 +260,7 @@ word_t eval(int p, int q, bool * success) {
         break;
       case TK_REG:
         num = isa_reg_str2val(tokens[p].str, success);
+        Log("isa 2 reg: %d", *success);
         break;
       default:
         Log("Unknow operand.");
