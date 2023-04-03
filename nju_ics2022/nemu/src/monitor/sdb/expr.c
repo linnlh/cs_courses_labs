@@ -186,7 +186,7 @@ int get_priority(int op_type) {
     case '-':
         return 3;
     default:
-        Log("Don't support this operator.");
+        Log("Don't support this operator %c", op_type);
         Log("Op Type: %d", op_type);
         assert(0);
     }
