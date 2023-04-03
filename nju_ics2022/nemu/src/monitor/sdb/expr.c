@@ -226,7 +226,7 @@ int find_main_op(int p, int q) {
       if(cnt != 0)
         return -1;
     }
-    else if (is_operator(op_type) && get_priority(main_op_type) < get_priority(op_type)) {
+    else if (is_operator(op_type) && get_priority(main_op_type) <= get_priority(op_type)) {
       main_op_idx = idx;
       main_op_type = op_type;
     }
